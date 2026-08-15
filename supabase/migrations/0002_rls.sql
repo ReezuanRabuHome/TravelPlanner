@@ -46,14 +46,20 @@ create policy trips_delete on public.trips
 do $$
 declare
   t text;
+  policy_name text;
 begin
   foreach t in array array['trip_days', 'bookings', 'events', 'prep_items', 'documents', 'share_links']
   loop
-    execute format('drop policy if exists %I_owner_all on public.%I', t, t);
+    -- Build the policy name first: format('%I_owner_all', t) would splice the
+    -- suffix outside the quoting that %I applies, which breaks the moment a
+    -- table name needs quoting.
+    policy_name := t || '_owner_all';
+
+    execute format('drop policy if exists %I on public.%I', policy_name, t);
     execute format(
-      'create policy %I_owner_all on public.%I for all
+      'create policy %I on public.%I for all
          using (public.owns_trip(trip_id))
-         with check (public.owns_trip(trip_id))', t, t);
+         with check (public.owns_trip(trip_id))', policy_name, t);
   end loop;
 end
 $$;
