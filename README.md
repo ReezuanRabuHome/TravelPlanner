@@ -59,8 +59,12 @@ Copy `.env.example` to `.env.local` and fill in the values from
 cp .env.example .env.local
 ```
 
-`SUPABASE_SERVICE_ROLE_KEY` is server-only and bypasses RLS. It is used for exactly
-one thing — rendering share links for people with no account. Never expose it.
+`SUPABASE_SECRET_KEY` is server-only and bypasses RLS. It is used for exactly one
+thing — rendering share links for people with no account. Never expose it. Find it
+under **Project Settings → API Keys → Secret keys → Create new secret key**; older
+projects can supply their `service_role` JWT as `SUPABASE_SERVICE_ROLE_KEY` instead.
+
+Everything except share links works without it, so it is safe to add later.
 
 ### 3. Run
 
