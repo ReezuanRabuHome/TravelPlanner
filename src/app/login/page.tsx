@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation'
 
+import { siteOrigin } from '@/lib/origin'
 import { createClient, getUser } from '@/lib/supabase/server'
 
 export const metadata = { title: 'Sign in · Boarding Pass' }
@@ -11,7 +12,7 @@ async function sendMagicLink(formData: FormData) {
   if (!email) redirect('/login?error=Enter+your+email+address')
 
   const supabase = await createClient()
-  const origin = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
+  const origin = await siteOrigin()
 
   const { error } = await supabase.auth.signInWithOtp({
     email,

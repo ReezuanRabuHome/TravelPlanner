@@ -47,8 +47,16 @@ supabase/migrations/0002_rls.sql       row level security
 supabase/migrations/0003_storage.sql   private bucket + storage policies
 ```
 
-In **Authentication → URL Configuration**, add your site URL and
-`https://<your-app>/auth/confirm` as a redirect URL.
+In **Authentication → URL Configuration**:
+
+- **Site URL** → your deployed URL, e.g. `https://travel-planner-zeta-nine.vercel.app`
+- **Redirect URLs** → add both `https://<your-app>/**` and `http://localhost:3000/**`
+
+Both matter. Supabase silently ignores a redirect target that is not on the allow
+list and falls back to Site URL instead — which is how a production sign-in email
+ends up pointing at localhost. The app itself derives its origin from the incoming
+request (see [`src/lib/origin.ts`](src/lib/origin.ts)), so it always asks for the
+right host; Supabase still has to be told that host is permitted.
 
 ### 2. Environment
 

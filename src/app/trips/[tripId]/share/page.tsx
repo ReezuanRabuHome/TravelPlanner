@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 
 import { createShareLinkForm, revokeShareLink } from '@/lib/actions'
+import { siteOrigin } from '@/lib/origin'
 import { createClient } from '@/lib/supabase/server'
 import { getTripBundle } from '@/lib/load'
 import type { ShareLink } from '@/lib/types'
@@ -18,7 +19,7 @@ export default async function SharePage({ params }: { params: Promise<{ tripId: 
     .order('created_at', { ascending: false })
 
   const links = (data ?? []) as ShareLink[]
-  const origin = process.env.NEXT_PUBLIC_SITE_URL ?? ''
+  const origin = await siteOrigin()
 
   return (
     <>
@@ -59,7 +60,7 @@ export default async function SharePage({ params }: { params: Promise<{ tripId: 
           <div className="sharerow" key={link.id} data-revoked={link.revoked}>
             <span style={{ fontWeight: 600, fontSize: 14 }}>{link.label ?? 'Family link'}</span>
             <code>
-              {origin || 'https://your-app.vercel.app'}/share/{link.token}
+              {origin}/share/{link.token}
             </code>
             {link.revoked ? (
               <span className="badge warn">Revoked</span>
