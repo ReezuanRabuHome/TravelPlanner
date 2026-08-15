@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "format": "prettier --write \"src/**/*.{ts,tsx,css}\"",
+    "set-password": "tsx scripts/set-password.ts",
     "smoke": "tsx scripts/smoke.ts",
     "purge": "tsx scripts/purge-smoke.ts"
   },
