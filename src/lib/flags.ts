@@ -29,10 +29,13 @@ export function buildFlags(bundle: TripBundle): Flag[] {
     })
   }
 
-  // ---------------------------------------------------------- flights with no paperwork
+  // ---------------------------------------------------------- flights nobody has thought about
+  // Only fires when there is no document row for the flight at all. If a placeholder
+  // exists, the missing-documents rule above already names it — flagging both turns
+  // one problem into two lines of noise.
   for (const flight of bookings.filter((b) => b.kind === 'flight')) {
-    const attached = documents.some((d) => d.booking_id === flight.id && d.storage_path)
-    if (!attached) {
+    const known = documents.some((d) => d.booking_id === flight.id)
+    if (!known) {
       flags.push({
         level: 'missing',
         title: `Nothing attached to ${flight.title}`,
